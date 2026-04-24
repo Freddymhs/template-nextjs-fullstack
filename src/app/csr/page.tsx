@@ -4,14 +4,16 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 
 export default function CSRPage() {
-  const [clientTime, setClientTime] = useState<string>(() => new Date().toISOString());
+  const [clientTime, setClientTime] = useState<string | null>(null);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setClientTime(new Date().toISOString());
-    }, 1000);
-    return () => clearInterval(interval);
+    const timeout = setTimeout(() => setClientTime(new Date().toISOString()), 0);
+    const interval = setInterval(() => setClientTime(new Date().toISOString()), 1000);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
   }, []);
 
   return (
